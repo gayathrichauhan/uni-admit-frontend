@@ -1,32 +1,90 @@
 /**
  * ============================================================================
  * Uni Admit Frontend
- * Global Constants
+ * Application Constants
  * ============================================================================
  *
- * This file contains application-wide constant values.
- * Keep only values that are reused across multiple modules.
+ * Shared constants used across the application.
+ * Mirrors backend routes and authentication flow.
  */
 
-/**
- * Application Name
- */
-export const APP_NAME = "Uni Admit";
+/* ==========================================================================
+   USER ROLES
+   ========================================================================== */
 
-/**
- * API Gateway Base URL
- *
- * All frontend requests must be routed through the API Gateway.
- *
- * Gateway:
- * http://localhost:8080
- */
-export const API_BASE_URL = "http://localhost:8080";
+export const ROLES = {
+    STUDENT: "ROLE_STUDENT",
+    ADMIN: "ROLE_ADMIN",
+} as const;
 
-/**
- * Local Storage Keys
- *
- * Used for JWT authentication.
- */
-export const ACCESS_TOKEN_KEY = "accessToken";
-export const REFRESH_TOKEN_KEY = "refreshToken";
+/* ==========================================================================
+   LOCAL STORAGE KEYS
+   ========================================================================== */
+
+export const STORAGE_KEYS = {
+    ACCESS_TOKEN: "accessToken",
+    REFRESH_TOKEN: "refreshToken",
+} as const;
+
+/* ==========================================================================
+   API ENDPOINTS (API Gateway)
+   ========================================================================== */
+
+export const API_ENDPOINTS = {
+
+    AUTH: {
+        REGISTER: "/auth/register",
+        LOGIN: "/auth/login",
+        REFRESH: "/auth/refresh",
+        LOGOUT: "/auth/logout",
+        USER_EXISTS: (userId: string) => `/auth/users/${userId}/exists`,
+    },
+
+    PROFILE: {
+        CREATE: "/profile",
+        GET_ME: "/profile/me",
+        UPDATE_ME: "/profile/me",
+        GET_BY_ID: (profileId: string) => `/profile/${profileId}`,
+    },
+
+    ADMISSION: {
+        SUBMIT: "/application",
+        GET_ALL: "/application",
+        GET_MY: "/application/my",
+        GET_BY_ID: (applicationId: string) =>
+            `/application/${applicationId}`,
+        UPDATE_STATUS: (applicationId: string) =>
+            `/application/${applicationId}/status`,
+    },
+
+    DOCUMENT: {
+        UPLOAD: "/docs/upload",
+        GET_MY: "/docs/my",
+        GET_BY_ID: (documentId: string) =>
+            `/docs/${documentId}`,
+        GET_BY_APPLICATION: (applicationId: string) =>
+            `/docs/application/${applicationId}`,
+        DELETE: (documentId: string) =>
+            `/docs/${documentId}`,
+    },
+
+    ADMIN: {
+        TEST: "/admin/test",
+        APPLICATIONS: "/admin/applications",
+        APPLICATION_DETAIL: (applicationId: string) =>
+            `/admin/applications/${applicationId}`,
+        REVIEW_APPLICATION: (applicationId: string) =>
+            `/admin/applications/${applicationId}/review`,
+        ANALYTICS: "/admin/analytics",
+    },
+
+} as const;
+
+/* ==========================================================================
+   HTTP HEADER NAMES
+   ========================================================================== */
+
+export const HEADERS = {
+    AUTHORIZATION: "Authorization",
+    BEARER_PREFIX: "Bearer ",
+} as const;

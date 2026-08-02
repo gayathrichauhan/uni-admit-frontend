@@ -24,7 +24,7 @@ interface JwtPayload {
 
 interface AuthState {
     isAuthenticated: boolean;
-    userId: string | null;
+    userId: string |null;
     email: string | null;
     role: string | null;
 
@@ -46,9 +46,7 @@ export const useAuthStore = create<AuthState>((set) => ({
     initialize: () => {
         const token = getAccessToken();
 
-        if (!token) {
-            return;
-        }
+        if (!token) return;
 
         try {
             const payload = jwtDecode<JwtPayload>(token);
@@ -84,17 +82,9 @@ export const useAuthStore = create<AuthState>((set) => ({
         });
     },
 
+    // ✅ Register ONLY creates account
     register: async (request) => {
-        const response = await authService.register(request);
-
-        const payload = jwtDecode<JwtPayload>(response.accessToken);
-
-        set({
-            isAuthenticated: true,
-            userId: payload.userId,
-            email: payload.sub,
-            role: payload.role,
-        });
+        await authService.register(request);
     },
 
     logout: async () => {

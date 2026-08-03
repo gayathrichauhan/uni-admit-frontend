@@ -147,7 +147,7 @@ export interface ApplicationResponse {
 
 /**
  * Document Response
- * Returned after a successful document upload or retrieval.
+ * Returned after a successful documents upload or retrieval.
  */
 export interface DocumentResponse {
     id: UUID;

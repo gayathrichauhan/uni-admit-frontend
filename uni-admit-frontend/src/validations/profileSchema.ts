@@ -70,4 +70,4 @@ export const profileSchema = z.object({
 /**
  * Type inferred from schema
  */
-export type ProfileFormData = z.infer<typeof profileSchema>;
+export type ProfileFormData = z.input<typeof profileSchema>;

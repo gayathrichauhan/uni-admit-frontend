@@ -88,3 +88,11 @@ export const HEADERS = {
     AUTHORIZATION: "Authorization",
     BEARER_PREFIX: "Bearer ",
 } as const;
+
+// Application module endpoints (relative to gateway base URL already
+// configured in lib/axios.ts).
+export const APPLICATION_ENDPOINTS = {
+    SUBMIT: '/application',
+    MY_APPLICATIONS: '/application/my',
+    BY_ID: (applicationId: string) => `/application/${applicationId}`,
+} as const;

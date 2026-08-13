@@ -15,6 +15,8 @@
 /**
  * Universally Unique Identifier (UUID)
  */
+
+
 export type UUID = string;
 
 /**
@@ -204,3 +206,5 @@ export interface StatusUpdateRequest {
     reason: string;
     adminComments: string;
 }
+
+export * from './application';

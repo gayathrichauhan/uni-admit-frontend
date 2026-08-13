@@ -1,4 +1,5 @@
 import axios from "axios";
+import { getAccessToken } from "@/lib/auth";
 
 const api = axios.create({
     baseURL: process.env.NEXT_PUBLIC_API_BASE_URL,
@@ -8,12 +9,13 @@ const api = axios.create({
     withCredentials: false,
 });
 
-// Automatically attach JWT token to every request
+/**
+ * Automatically attach JWT access token
+ * to every authenticated request.
+ */
 api.interceptors.request.use(
     (config) => {
-        const token =
-            localStorage.getItem("accessToken") ||
-            localStorage.getItem("token");
+        const token = getAccessToken();
 
         if (token) {
             config.headers.Authorization = `Bearer ${token}`;
@@ -21,9 +23,7 @@ api.interceptors.request.use(
 
         return config;
     },
-    (error) => {
-        return Promise.reject(error);
-    }
+    (error) => Promise.reject(error)
 );
 
 export default api;

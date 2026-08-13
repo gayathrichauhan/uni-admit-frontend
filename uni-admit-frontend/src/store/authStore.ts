@@ -14,6 +14,8 @@ import {
     RegisterRequest,
 } from "@/types";
 
+import { useProfileStore } from "@/store/profileStore";
+
 interface JwtPayload {
     sub: string;
     userId: string;
@@ -24,7 +26,7 @@ interface JwtPayload {
 
 interface AuthState {
     isAuthenticated: boolean;
-    userId: string |null;
+    userId: string | null;
     email: string | null;
     role: string | null;
 
@@ -46,7 +48,11 @@ export const useAuthStore = create<AuthState>((set) => ({
     initialize: () => {
         const token = getAccessToken();
 
-        if (!token) return;
+        if (!token) {
+            useProfileStore.getState().clearProfile();
+
+            return;
+        }
 
         try {
             const payload = jwtDecode<JwtPayload>(token);
@@ -59,6 +65,8 @@ export const useAuthStore = create<AuthState>((set) => ({
             });
         } catch {
             clearTokens();
+
+            useProfileStore.getState().clearProfile();
 
             set({
                 isAuthenticated: false,
@@ -74,6 +82,9 @@ export const useAuthStore = create<AuthState>((set) => ({
 
         const payload = jwtDecode<JwtPayload>(response.accessToken);
 
+        // Ensure previous user's profile is removed
+        useProfileStore.getState().clearProfile();
+
         set({
             isAuthenticated: true,
             userId: payload.userId,
@@ -82,7 +93,7 @@ export const useAuthStore = create<AuthState>((set) => ({
         });
     },
 
-    // ✅ Register ONLY creates account
+    // Register only creates account
     register: async (request) => {
         await authService.register(request);
     },
@@ -92,6 +103,9 @@ export const useAuthStore = create<AuthState>((set) => ({
             await authService.logout();
         } finally {
             clearTokens();
+
+            // Clear profile state completely
+            useProfileStore.getState().clearProfile();
 
             set({
                 isAuthenticated: false,

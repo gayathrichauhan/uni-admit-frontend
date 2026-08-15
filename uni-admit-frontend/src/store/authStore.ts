@@ -4,6 +4,7 @@ import { create } from "zustand";
 import { jwtDecode } from "jwt-decode";
 
 import authService from "@/services/authService";
+
 import {
     clearTokens,
     getAccessToken,
@@ -50,7 +51,6 @@ export const useAuthStore = create<AuthState>((set) => ({
 
         if (!token) {
             useProfileStore.getState().clearProfile();
-
             return;
         }
 
@@ -80,9 +80,10 @@ export const useAuthStore = create<AuthState>((set) => ({
     login: async (request) => {
         const response = await authService.login(request);
 
-        const payload = jwtDecode<JwtPayload>(response.accessToken);
+        const payload = jwtDecode<JwtPayload>(
+            response.accessToken
+        );
 
-        // Ensure previous user's profile is removed
         useProfileStore.getState().clearProfile();
 
         set({
@@ -93,7 +94,10 @@ export const useAuthStore = create<AuthState>((set) => ({
         });
     },
 
-    // Register only creates account
+    /**
+     * Registration only creates the account.
+     * User can login afterwards.
+     */
     register: async (request) => {
         await authService.register(request);
     },
@@ -104,7 +108,6 @@ export const useAuthStore = create<AuthState>((set) => ({
         } finally {
             clearTokens();
 
-            // Clear profile state completely
             useProfileStore.getState().clearProfile();
 
             set({
